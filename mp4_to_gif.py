@@ -4,7 +4,7 @@ from art import tprint
 from moviepy.video.compositing.concatenate import concatenate_videoclips
 from moviepy.editor import VideoFileClip, clips_array, concatenate_videoclips
 
-def convert(dir, height = 400):
+def convert(dir, height = 400, second = 10, step = 2):
     if os.path.isfile(dir):
         
         # return name files for *.gif
@@ -15,15 +15,18 @@ def convert(dir, height = 400):
         print(f'[+] Processing...')
 
         # open video and resize to height
-        clip1 = VideoFileClip(dir).subclip(0,2).resize(height=height)
-        clip2 = VideoFileClip(dir).subclip(2,4).resize(height=height)
-        clip3 = VideoFileClip(dir).subclip(4,6).resize(height=height)
-        clip4 = VideoFileClip(dir).subclip(6,8).resize(height=height)
-        clip4 = VideoFileClip(dir).subclip(8,10).resize(height=height)
-        clip5 = VideoFileClip(dir).subclip(10,12).resize(height=height)
+        # clip1 = VideoFileClip(dir).subclip(0,2).resize(height=height)
+        # clip2 = VideoFileClip(dir).subclip(2,4).resize(height=height)
+        # ...
+        # clip5 = VideoFileClip(dir).subclip(10,12).resize(height=height)
+        clip_list = []
+        for i in range(second+step):
+            if i%step == 0:
+                print(f"{i} {i+step}")
+                clip_list.append(VideoFileClip(dir).subclip(i,i+step).resize(height=height))
 
-        # final 
-        final_clip = concatenate_videoclips([clip1, clip2, clip3, clip4, clip5])
+        # final clip_list = [clip1, clip2, ..., clip5]
+        final_clip = concatenate_videoclips(clip_list)
         final_clip.write_gif(f"{f_name}.gif")
         
         print(f'[+] {f_name}.gif saved successfully!\n---Have a good day---')
